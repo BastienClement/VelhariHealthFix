@@ -53,6 +53,13 @@ frame:RegisterEvent("ENCOUNTER_END")
 
 local AURA_OF_CONTEMPT = GetSpellInfo(179986)
 
+local function Disable()
+	velhari_health_factor = 1
+	velhari_encounter_active = false
+	BlizzardDisable()
+	Refresh()
+end
+
 local function Scan()
 	if not velhari_encounter_active then return end
 	local max_percentage = select(15, UnitAura("boss1", AURA_OF_CONTEMPT))
@@ -60,6 +67,10 @@ local function Scan()
 		velhari_health_factor = max_percentage / 100
 	else
 		velhari_health_factor = 1
+		if not UnitExists("boss1") then
+			Disable()
+			return
+		end
 	end
 	C_Timer.After(1, Scan)
 end
@@ -78,13 +89,6 @@ local function Enable()
 	Refresh()
 	
 	Scan()
-end
-
-local function Disable()
-	velhari_health_factor = 1
-	velhari_encounter_active = false
-	BlizzardDisable()
-	Refresh()
 end
 
 frame:SetScript("OnEvent", function(_, event, encounterID)
