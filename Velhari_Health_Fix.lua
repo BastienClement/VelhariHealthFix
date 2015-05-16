@@ -2,6 +2,7 @@
 -- Correction factor
 --
 local velhari_health_factor = 1
+local velhari_encounter_active = false
 
 --
 -- Blizzard Frame Hook
@@ -50,26 +51,45 @@ local frame = CreateFrame("Frame")
 frame:RegisterEvent("ENCOUNTER_START")
 frame:RegisterEvent("ENCOUNTER_END")
 
+local AURA_OF_CONTEMPT = GetSpellInfo(179986)
+
+local function Scan()
+	if not velhari_encounter_active then return end
+	local max_percentage = select(15, UnitAura("boss1", AURA_OF_CONTEMPT))
+	if max_percentage then
+		velhari_health_factor = max_percentage / 100
+	else
+		velhari_health_factor = 1
+	end
+	C_Timer.After(1, Scan)
+end
+
 local function Refresh()
 	GridRefresh()
 end
 
 local function Enable()
+	if velhari_encounter_active then return end
+	
 	velhari_health_factor = 1
+	velhari_encounter_active = true
+	
 	BlizzardEnable()
 	Refresh()
+	
+	Scan()
 end
 
 local function Disable()
 	velhari_health_factor = 1
+	velhari_encounter_active = false
 	BlizzardDisable()
 	Refresh()
 end
 
 frame:SetScript("OnEvent", function(_, event, encounterID)
-	if event == "ENCOUNTER_START" then
+	if event == "ENCOUNTER_START" and encounterID == 1784 then
 		Enable()
-		print("BEGIN ENCOUNTER: " .. encounterID)
 	elseif event == "ENCOUNTER_END" then
 		Disable()
 	end
