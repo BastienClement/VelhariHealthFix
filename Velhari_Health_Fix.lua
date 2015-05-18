@@ -53,6 +53,10 @@ frame:RegisterEvent("ENCOUNTER_END")
 
 local AURA_OF_CONTEMPT = GetSpellInfo(179986)
 
+local function Refresh()
+	GridRefresh()
+end
+
 local function Disable()
 	velhari_health_factor = 1
 	velhari_encounter_active = false
@@ -73,10 +77,6 @@ local function Scan()
 		end
 	end
 	C_Timer.After(1, Scan)
-end
-
-local function Refresh()
-	GridRefresh()
 end
 
 local function Enable()
