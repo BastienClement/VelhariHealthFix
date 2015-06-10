@@ -54,7 +54,7 @@ frame:RegisterEvent("ENCOUNTER_END")
 local AURA_OF_CONTEMPT = GetSpellInfo(179986)
 
 local function Refresh()
-	GridRefresh()
+	if GridRefresh then GridRefresh() end
 end
 
 local function Disable()
