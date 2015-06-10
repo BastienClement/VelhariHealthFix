@@ -3,13 +3,18 @@
 --
 local velhari_health_factor = 1
 local velhari_encounter_active = false
+local AURA_OF_CONTEMPT = GetSpellInfo(179986)
 
 --
 -- Blizzard Frame Hook
 --
 local _UnitHealth = UnitHealth
 local function BlizzardUnitHealth(unit)
-	return _UnitHealth(unit) / velhari_health_factor
+	if UnitAura(unit, AURA_OF_CONTEMPT) then
+		return _UnitHealth(unit) / velhari_health_factor
+	else
+		return _UnitHealth(unit)
+	end
 end
 
 local function BlizzardEnable()
@@ -50,8 +55,6 @@ local frame = CreateFrame("Frame")
 
 frame:RegisterEvent("ENCOUNTER_START")
 frame:RegisterEvent("ENCOUNTER_END")
-
-local AURA_OF_CONTEMPT = GetSpellInfo(179986)
 
 local function Refresh()
 	if GridRefresh then GridRefresh() end
