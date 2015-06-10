@@ -88,7 +88,7 @@ local function Enable()
 	BlizzardEnable()
 	Refresh()
 	
-	Scan()
+	C_Timer.After(1, Scan)
 end
 
 frame:SetScript("OnEvent", function(_, event, encounterID)
