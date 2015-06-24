@@ -4,14 +4,13 @@
 local velhari_health_factor = 1
 local velhari_encounter_active = false
 local AURA_OF_CONTEMPT = GetSpellInfo(179986)
-local AURA_OF_CONTEMPT_DEBUFF = GetSpellInfo(179987)
 
 --
 -- Blizzard Frame Hook
 --
 local _UnitHealth = UnitHealth
 local function BlizzardUnitHealth(unit)
-	if UnitAura(unit, AURA_OF_CONTEMPT_DEBUFF) then
+	if UnitIsFriend("player", unit) then
 		return _UnitHealth(unit) / velhari_health_factor
 	else
 		return _UnitHealth(unit)
@@ -73,6 +72,7 @@ local function Scan()
 	local max_percentage = select(15, UnitAura("boss1", AURA_OF_CONTEMPT))
 	if max_percentage then
 		velhari_health_factor = max_percentage / 100
+		Refresh()
 	else
 		velhari_health_factor = 1
 		if not UnitExists("boss1") then
