@@ -4,13 +4,14 @@
 local velhari_health_factor = 1
 local velhari_encounter_active = false
 local AURA_OF_CONTEMPT = GetSpellInfo(179986)
+local AURA_OF_CONTEMPT_DEBUFF = GetSpellInfo(179987)
 
 --
 -- Blizzard Frame Hook
 --
 local _UnitHealth = UnitHealth
 local function BlizzardUnitHealth(unit)
-	if UnitAura(unit, AURA_OF_CONTEMPT) then
+	if UnitAura(unit, AURA_OF_CONTEMPT_DEBUFF) then
 		return _UnitHealth(unit) / velhari_health_factor
 	else
 		return _UnitHealth(unit)
