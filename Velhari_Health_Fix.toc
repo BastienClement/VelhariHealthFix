@@ -1,6 +1,6 @@
 ## Interface: 60200
 ## Title: Velhari Health Fix
-## OptionalDeps: Grid
+## OptionalDeps: Grid VuhDo
 
 Velhari_Health_Fix.lua
 

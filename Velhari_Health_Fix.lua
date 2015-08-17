@@ -28,7 +28,7 @@ end
 --
 -- VuhDo Hook
 --
-local hasVuhDo = false
+local hasVuhDo = _G["VUHDO_CONFIG"] and true or false
 
 local _UnitHealthMax = UnitHealthMax
 local function VuhDoUnitHealthMax(unit)
@@ -48,8 +48,8 @@ local function VuhDoDisable()
 end
 
 local function VuhDoRefresh()
-	for unit, _ in pairs(_G["VUHDO_RAID"]) do
-		_G["VUHDO_updateHealth"](unit, 3)
+	for unit, _ in pairs(VUHDO_RAID) do
+		VUHDO_updateHealth(unit, 3)
 	end
 end
 
@@ -124,11 +124,7 @@ local function Enable()
 	
 	BlizzardEnable()
 
-	if _G["VUHDO_CONFIG"] then
-		hasVuhDo = true
-
-		VuhDoEnable() 
-	end
+	if hasVuhDo then VuhDoEnable() end
 
 	Refresh()
 	
