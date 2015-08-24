@@ -107,7 +107,11 @@ local function Scan()
 		velhari_health_factor = max_percentage / 100
 		Refresh()
 	else
-		velhari_health_factor = 1
+		if velhari_health_factor ~= 1 then
+			velhari_health_factor = 1
+			Refresh()
+		end
+
 		if not UnitExists("boss1") then
 			Disable()
 			return
