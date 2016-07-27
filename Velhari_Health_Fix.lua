@@ -69,7 +69,7 @@ end
 
 local function Scan()
 	if not velhari_encounter_active then return end
-	local max_percentage = select(15, UnitAura("boss1", AURA_OF_CONTEMPT))
+	local max_percentage = select(17, UnitAura("boss1", AURA_OF_CONTEMPT))
 	if max_percentage then
 		velhari_health_factor = max_percentage / 100
 		Refresh()
