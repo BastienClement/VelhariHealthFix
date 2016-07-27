@@ -26,6 +26,34 @@ local function BlizzardDisable()
 end
 
 --
+-- VuhDo Hook
+--
+local hasVuhDo = _G["VUHDO_CONFIG"] and true or false
+
+local _UnitHealthMax = UnitHealthMax
+local function VuhDoUnitHealthMax(unit)
+	if UnitIsFriend("player", unit) then
+		return _UnitHealthMax(unit) * velhari_health_factor
+	else
+		return _UnitHealthMax(unit)
+	end
+end
+
+local function VuhDoEnable()
+	UnitHealthMax = VuhDoUnitHealthMax
+end
+
+local function VuhDoDisable()
+	UnitHealthMax = _UnitHealthMax
+end
+
+local function VuhDoRefresh()
+	for unit, _ in pairs(VUHDO_RAID) do
+		VUHDO_updateHealth(unit, 3)
+	end
+end
+
+--
 -- Grid Hook
 --
 local GridRefresh
@@ -58,12 +86,17 @@ frame:RegisterEvent("ENCOUNTER_END")
 
 local function Refresh()
 	if GridRefresh then GridRefresh() end
+
+	if hasVuhDo then VuhDoRefresh() end
 end
 
 local function Disable()
 	velhari_health_factor = 1
 	velhari_encounter_active = false
 	BlizzardDisable()
+
+	if hasVuhDo then VuhDoDisable() end
+	
 	Refresh()
 end
 
@@ -74,7 +107,11 @@ local function Scan()
 		velhari_health_factor = max_percentage / 100
 		Refresh()
 	else
-		velhari_health_factor = 1
+		if velhari_health_factor ~= 1 then
+			velhari_health_factor = 1
+			Refresh()
+		end
+
 		if not UnitExists("boss1") then
 			Disable()
 			return
@@ -90,6 +127,9 @@ local function Enable()
 	velhari_encounter_active = true
 	
 	BlizzardEnable()
+
+	if hasVuhDo then VuhDoEnable() end
+
 	Refresh()
 	
 	C_Timer.After(1, Scan)
